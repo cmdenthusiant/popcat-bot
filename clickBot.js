@@ -20,6 +20,7 @@ var s = 0;
 var m = 0;
 var h = 0;
 var res = null;
+var clickmode = true;
 const click = new KeyboardEvent("keydown", {
     bubbles: true, cancelable: true, keyCode: 19
 });
@@ -27,7 +28,7 @@ const click1 = new KeyboardEvent("keyup", {
     bubbles: true, cancelable: true, keyCode: 19
 });
 (function() {
-    if (true) {
+    if (clickmode) {//change mode
         setInterval(clickLoop, 39);
     } else {
         document.dispatchEvent(click);
@@ -48,14 +49,16 @@ function timer() {
             h += 1;
         };
     };
-    if (res == null) {
-        div.innerHTML = '<div>運行時間: '+h+'h'+m+'m'+s+'s</div><div style="color:red">第1輪api請求可能會出錯</div>';
-    } else if (res == 201) {
-        div.innerHTML = '<div>運行時間: '+h+'h'+m+'m'+s+'s</div><div style="color:green">第'+count+'輪api請求:成功</div>';
-    } else if (res == 429) {
-        div.innerHTML = '<div>運行時間: '+h+'h'+m+'m'+s+'s</div><div style="color:red">第'+count+'輪api請求:失敗</div>';
-    } else {
-        div.innerHTML = '<div>運行時間: '+h+'h'+m+'m'+s+'s</div><div style="color:grey">第'+count+'輪api請求:'+res+'</div>';
+    if (!clickmode) {
+        if (res == null) {
+            div.innerHTML = '<div>運行時間: '+h+'h'+m+'m'+s+'s</div><div style="color:red">第1輪api請求可能會出錯</div>';
+        } else if (res == 201) {
+            div.innerHTML = '<div>運行時間: '+h+'h'+m+'m'+s+'s</div><div style="color:green">第'+count+'輪api請求:成功</div>';
+        } else if (res == 429) {
+            div.innerHTML = '<div>運行時間: '+h+'h'+m+'m'+s+'s</div><div style="color:red">第'+count+'輪api請求:失敗</div>';
+        } else {
+            div.innerHTML = '<div>運行時間: '+h+'h'+m+'m'+s+'s</div><div style="color:grey">第'+count+'輪api請求:'+res+'</div>';
+        };
     };
 };
 function clickLoop() {
@@ -74,5 +77,5 @@ function apiLoop() {
     document.dispatchEvent(click);
     document.dispatchEvent(click1);
     fetch('https://stats.popcat.click/pop?pop_count=799&captcha_token=1',{method:'POST'})
-    .then(response => {count += 1;res = response.status;});
+        .then(response => {count += 1;res = response.status;});
 };
